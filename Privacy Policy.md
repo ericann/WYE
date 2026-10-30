@@ -1,12 +1,12 @@
-# 隐私政策 (Privacy Policy) / Privacy Policy for OrgPrism
+# 隐私政策 (Privacy Policy) / Privacy Policy for Wye
 
-**Last Updated / 最后更新日期:** May 23, 2024
+**Last Updated / 最后更新日期:** Oct 31, 2026
 
 ## 1. 简介 (Introduction)
 
-OrgPrism ("we", "our", or "the Extension") is a Chrome extension designed to help Salesforce administrators and developers analyze and visualize permission chains and metadata dependencies.
+Wye ("we", "our", or "the Extension") is a Chrome extension designed to help Salesforce administrators and developers analyze and visualize permission chains and metadata dependencies.
 
-OrgPrism（“我们”或“本插件”）是一款专为 Salesforce 管理员和开发者设计的 Chrome 扩展，用于分析和可视化权限链路及元数据依赖。
+Wye（“我们”或“本插件”）是一款专为 Salesforce 管理员和开发者设计的 Chrome 扩展，用于分析和可视化权限链路及元数据依赖。
 
 We are committed to protecting your privacy. This policy explains what data we access, how it is used, and how it is secured.
 
@@ -80,8 +80,8 @@ You maintain full control over the OAuth access. You can revoke the Extension's 
 - **Option 1:** Uninstall the Chrome Extension.
   - 方式一：卸载此 Chrome 扩展。
 
-- **Option 2:** Log into your Salesforce Org -> Go to Setup -> Connected Apps OAuth Usage -> Find "OrgPrism" and click "Revoke".
-  - 方式二：登录 Salesforce -> 转到设置 -> 连接的应用程序 OAuth 使用情况 -> 找到 "OrgPrism" 并点击“撤销”。
+- **Option 2:** Log into your Salesforce Org -> Go to Setup -> Connected Apps OAuth Usage -> Find "Wye" and click "Revoke".
+  - 方式二：登录 Salesforce -> 转到设置 -> 连接的应用程序 OAuth 使用情况 -> 找到 "Wye" 并点击“撤销”。
 
 ## 7. 安全性 (Security)
 
