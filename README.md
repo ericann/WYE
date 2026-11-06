@@ -76,9 +76,9 @@ The exact availability of individual capabilities may depend on the current rele
 
 ## Roadmap | 产品与工程路线图
 
-See **[ROADMAP.md](./ROADMAP.md)** for the bilingual product and engineering roadmap, including phases, execution priorities, and milestones.
+See **[ROADMAP.md](./ROADMAP.md)** for the product direction and staged roadmap, and **[BACKLOG.md](./BACKLOG.md)** for selected publicly tracked work.
 
-产品与工程路线图（中英双语）请参阅 **[ROADMAP.md](./ROADMAP.md)**，其中包含阶段规划、执行优先级与里程碑。
+产品方向与阶段路线图请参阅 **[ROADMAP.md](./ROADMAP.md)**；当前公开跟踪的部分工作项请参阅 **[BACKLOG.md](./BACKLOG.md)**。
 
 ---
 
