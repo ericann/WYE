@@ -8,75 +8,7 @@ The architecture below shows how the workspace is assembled and where its extens
 
 ## How Wye fits together
 
-```mermaid
-flowchart TB
-    USER["Salesforce Professional"] --> VALUE["Wye Runtime Analysis Workspace<br/>One workspace · Multiple Orgs · Connected analysis"]
-
-    subgraph HOST["Host / Application"]
-      APP["Chrome Extension Host<br/>UI composition · Platform integration"]
-    end
-    VALUE --> APP
-
-    subgraph CORE["Wye Core"]
-      direction TB
-
-      subgraph RUNTIME["Runtime Foundation"]
-        CTX["Context<br/>Shared resources and workflow context"]
-        ROUTER["ActionRouter<br/>Action dispatch and orchestration"]
-        REG["Registration<br/>Managers and Services"]
-        CTX --> ROUTER
-        REG --> ROUTER
-      end
-
-      subgraph CAP["Workspace Capabilities"]
-        direction LR
-        SESSION["Multi-Org Session<br/>Org identity and session access"]
-        SF["Salesforce Services<br/>API access and reusable operations"]
-        SEARCH["Metadata Search<br/>Find resources across Orgs"]
-        PERM["Permission Analysis<br/>Understand effective access"]
-        REF["Reference Analysis<br/>Explore resource relationships"]
-      end
-
-      subgraph PORTS["Platform Contracts"]
-        STORAGE["StorageAPI"]
-        OAUTH["OAuthAPI"]
-      end
-
-      ROUTER --> SESSION
-      ROUTER --> SEARCH
-      ROUTER --> PERM
-      ROUTER --> REF
-      SESSION --> SF
-      SF --> STORAGE
-      SESSION --> OAUTH
-    end
-
-    APP --> CORE
-
-    subgraph ADAPTERS["Platform Implementations"]
-      CHROME_STORAGE["ChromeStorageAPI"]
-      CHROME_OAUTH["ChromeOAuthAPI"]
-      FUTURE["Other host adapters<br/>Possible future integrations"]
-    end
-
-    STORAGE -. implemented by .-> CHROME_STORAGE
-    OAUTH -. implemented by .-> CHROME_OAUTH
-    STORAGE -. can be implemented by .-> FUTURE
-    OAUTH -. can be implemented by .-> FUTURE
-
-    SF <--> ORGS[("Target Salesforce Orgs")]
-
-    classDef value fill:#e8f1ff,stroke:#6aa1ef,color:#123b70,stroke-width:1.5px
-    classDef runtime fill:#eaf1fc,stroke:#9ab7e8,color:#172d4d
-    classDef capability fill:#f2f3f5,stroke:#c9cdd4,color:#20242b
-    classDef port fill:#fff4df,stroke:#e6bd72,color:#5b3a08
-    classDef adapter fill:#e9f7ef,stroke:#8ac8a3,color:#174c2d
-    class VALUE value
-    class CTX,ROUTER,REG runtime
-    class SESSION,SF,SEARCH,PERM,REF capability
-    class STORAGE,OAUTH port
-    class CHROME_STORAGE,CHROME_OAUTH,FUTURE adapter
-```
+![Wye layered architecture: workspace value, runtime foundation, capabilities, platform contracts, and adapters](./assets/wye-architecture.svg)
 
 ### Read the diagram in three steps
 
