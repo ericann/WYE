@@ -1,131 +1,169 @@
 # Wye Architecture
 
-**Wye is a Salesforce runtime analysis workspace.** It brings multi-Org work, context-aware execution, and composable analysis capabilities into one workspace.
+**One workspace. Multiple Salesforce Orgs. Connected analysis.**
 
-This page is a high-level guide to the system's architectural boundaries. It intentionally excludes private implementation details and internal decision records. The diagram is conceptual, not an exhaustive implementation map.
+Wye helps Salesforce professionals investigate and operate across Orgs, understand access, and explore metadata relationships — without treating every task as a disconnected utility.
 
-## Architecture at a glance
+The architecture below shows how the workspace is assembled and where its extensibility comes from. It is a public, high-level view; it does not expose private implementation details.
+
+## How Wye fits together
 
 ```mermaid
 flowchart TB
-    USER[Salesforce user] --> UI[Workspace UI]
-    UI --> APP[Application integration]
-    APP --> CTX[Work Context]
-    APP --> DISPATCH[Action dispatch]
-    APP --> SESSION[Org session management]
-    DISPATCH --> CORE[Core capabilities]
-    CTX -. binds inputs and results .-> CORE
-    SESSION --> SF[Salesforce services]
-    CORE --> SF
-    SF <--> ORG[(Target Salesforce Orgs)]
+    USER["Salesforce Professional"] --> VALUE["Wye Runtime Analysis Workspace<br/>One workspace · Multiple Orgs · Connected analysis"]
+
+    subgraph HOST["Host / Application"]
+      APP["Chrome Extension Host<br/>UI composition · Platform integration"]
+    end
+    VALUE --> APP
+
+    subgraph CORE["Wye Core"]
+      direction TB
+
+      subgraph RUNTIME["Runtime Foundation"]
+        CTX["Context<br/>Shared resources and workflow context"]
+        ROUTER["ActionRouter<br/>Action dispatch and orchestration"]
+        REG["Registration<br/>Managers and Services"]
+        CTX --> ROUTER
+        REG --> ROUTER
+      end
+
+      subgraph CAP["Workspace Capabilities"]
+        direction LR
+        SESSION["Multi-Org Session<br/>Org identity and session access"]
+        SF["Salesforce Services<br/>API access and reusable operations"]
+        SEARCH["Metadata Search<br/>Find resources across Orgs"]
+        PERM["Permission Analysis<br/>Understand effective access"]
+        REF["Reference Analysis<br/>Explore resource relationships"]
+      end
+
+      subgraph PORTS["Platform Contracts"]
+        STORAGE["StorageAPI"]
+        OAUTH["OAuthAPI"]
+      end
+
+      ROUTER --> SESSION
+      ROUTER --> SEARCH
+      ROUTER --> PERM
+      ROUTER --> REF
+      SESSION --> SF
+      SF --> STORAGE
+      SESSION --> OAUTH
+    end
+
+    APP --> CORE
+
+    subgraph ADAPTERS["Platform Implementations"]
+      CHROME_STORAGE["ChromeStorageAPI"]
+      CHROME_OAUTH["ChromeOAuthAPI"]
+      FUTURE["Other host adapters<br/>Possible future integrations"]
+    end
+
+    STORAGE -. implemented by .-> CHROME_STORAGE
+    OAUTH -. implemented by .-> CHROME_OAUTH
+    STORAGE -. can be implemented by .-> FUTURE
+    OAUTH -. can be implemented by .-> FUTURE
+
+    SF <--> ORGS[("Target Salesforce Orgs")]
+
+    classDef value fill:#e8f1ff,stroke:#6aa1ef,color:#123b70,stroke-width:1.5px
+    classDef runtime fill:#eaf1fc,stroke:#9ab7e8,color:#172d4d
+    classDef capability fill:#f2f3f5,stroke:#c9cdd4,color:#20242b
+    classDef port fill:#fff4df,stroke:#e6bd72,color:#5b3a08
+    classDef adapter fill:#e9f7ef,stroke:#8ac8a3,color:#174c2d
+    class VALUE value
+    class CTX,ROUTER,REG runtime
+    class SESSION,SF,SEARCH,PERM,REF capability
+    class STORAGE,OAUTH port
+    class CHROME_STORAGE,CHROME_OAUTH,FUTURE adapter
 ```
 
-- **Workspace UI** presents tools and analysis views; it does not own domain rules.
-- **Application integration** connects the UI, runtime services, action dispatch, and browser host.
-- **Work Context** associates a unit of work with its inputs, target Org where relevant, and results.
-- **Core capabilities** implement Salesforce operations and domain analysis independently of presentation.
-- **Salesforce services and session management** route requests to the intended Org and handle authenticated communication.
+### Read the diagram in three steps
 
-## Three architectural ideas
+1. **What users get:** one workspace for multi-Org operations, metadata discovery, and analysis.
+2. **How it works:** the runtime associates actions with context and routes them to reusable capabilities and Salesforce services.
+3. **Why it can evolve:** Core defines platform contracts; the host supplies implementations such as Chrome storage and OAuth adapters.
 
-### 1. Multi-Org is a runtime concern
+## The architectural ideas behind it
 
-An Org selector alone does not provide reliable multi-Org behavior. Each operation needs an explicit target Org and an authenticated session for that Org. The target must remain associated with the operation for its full lifecycle; it must not be inferred again from whichever Org is selected when an asynchronous response returns.
+### Multi-Org is part of execution, not just the interface
 
-A connected session makes a request possible, not guaranteed. Tokens can expire, requests can fail, and Salesforce authorization remains governed by the authenticated user's permissions in the target Org.
+Each operation needs an explicit target Org and the corresponding authenticated session. The target must remain associated with the operation throughout its execution. A connected session makes a request possible, not guaranteed; Salesforce authorization is still determined by the authenticated user's permissions in that Org.
 
-### 2. Context-aware execution
+### Context keeps work attached to its origin
 
-A Work Context represents a workflow, not a screen, tab, or panel. It keeps the inputs and results of an operation associated with the work that initiated it.
+A Context is not a screen, tab, or panel. It provides shared resources and a stable association for work. When a user navigates elsewhere while an action is running, the result should remain associated with the context that initiated it — not whichever view happens to be visible when the response returns.
 
-This matters when users navigate while an action is still running: the result belongs to its original context, even if another context is now visible. UI navigation should not silently reassign in-flight work or force the user back to the originating view.
+### Capabilities are reusable building blocks
 
-### 3. Composable analysis
+The workspace provides entry points; Core capabilities perform the work. This keeps Salesforce operations and analysis from being embedded in individual UI components. The same capability model can support different user workflows as the product evolves.
 
-Analysis capabilities should be reusable from different workspace entry points without moving domain logic into UI components. The workspace coordinates interaction; Core capabilities perform the work through shared Salesforce services.
+## Capability status
 
-Permission and Reference are important analysis directions in Wye's evolution. Their presence in the architecture does not imply that every scenario is already complete. See the public [roadmap](./ROADMAP.md) for delivery status.
+Wye's workspace foundation includes multi-Org session operations, Salesforce services, metadata search, and selected developer utilities. Permission and Reference are the two central analysis directions, and continue to evolve. Their full scope and delivery status are tracked in the public [roadmap](./ROADMAP.md); their appearance in the diagram is not a claim that every planned scenario has shipped.
 
-## Engineering boundaries
+## Platform boundary
 
-| Concern | Owns | Does not own |
-|---|---|---|
-| Workspace UI | Presentation, navigation, view state | Salesforce domain rules |
-| Application integration | Composition and dispatch | Capability-specific analysis |
-| Work Context | Workflow inputs and result association | UI navigation state |
-| Core capabilities | Operations and analysis logic | Browser-specific behavior |
-| Salesforce services | Org-directed API communication | UI presentation |
+Core defines contracts for platform-dependent resources such as storage and OAuth. The current extension host supplies Chrome-specific implementations. Other hosts could provide their own adapters in the future; this is an architectural extension point, not a claim that Web, Node.js, or server deployments are currently supported products.
 
-The guiding principles are straightforward:
+## Trust boundaries
 
-- Prefer explicit context and Org identity over mutable ambient state.
-- Keep domain logic independent of React components and browser APIs.
-- Treat missing or incomplete data as unknown, not as proof of absence.
-- Add abstractions when they represent real responsibilities, not for symmetry alone.
+Four concepts must remain distinct:
 
-## Trust and scope
+- **Context:** which workflow owns the inputs and results.
+- **Org identity:** which Salesforce Org an operation targets.
+- **Authentication and session state:** whether a usable authenticated session is available and whether requests succeed.
+- **Salesforce authorization:** what the authenticated user is allowed to access in that Org.
 
-Wye operates through the user's authenticated Salesforce sessions. Four things must remain distinct: workflow context, target Org identity, authentication/session state, and Salesforce authorization. Selecting an Org does not grant permissions; successfully reading metadata does not prove record-level access.
-
-This overview describes architectural foundations and boundaries, not a guarantee that every planned capability is shipped. Check the [README](./README.md) for the current project description, the [roadmap](./ROADMAP.md) for planned capability status, and the [Privacy Policy](./Privacy%20Policy.md) for data-handling commitments.
+Selecting an Org does not grant permissions, and successfully reading metadata does not prove record-level access. Wye's data-handling commitments are described in the [Privacy Policy](./Privacy%20Policy.md).
 
 ---
 
 # Wye 架构说明
 
-**Wye 是一个 Salesforce 运行时分析工作空间。** 它将多 Org 工作、上下文驱动执行和可组合的分析能力整合到同一个工作空间中。
+**一个工作空间。多个 Salesforce Org。连贯的分析能力。**
 
-本文只介绍系统的高层架构边界，不包含私有实现细节和内部决策记录。架构图用于表达职责关系，并非完整实现图。
+Wye 帮助 Salesforce 专业人员跨 Org 开展调查与操作、理解访问权限、探索 Metadata 关系，而不是把每项工作变成彼此割裂的工具。
 
-## 架构概览
+下面的架构图展示工作空间如何组合，以及系统从哪里获得扩展能力。本文是经过筛选的公开高层说明，不包含私有实现细节。
 
-上图展示了 Workspace UI、Application integration、Work Context、Core capabilities 与 Salesforce services 的主要关系：
+## Wye 如何组合
 
-- **Workspace UI** 负责呈现工具和分析视图，不承载领域规则。
-- **Application integration** 连接 UI、运行时服务、Action 分发和浏览器宿主。
-- **Work Context** 将一项工作的输入、目标 Org（如适用）和结果关联起来。
-- **Core capabilities** 独立于界面实现 Salesforce 操作与领域分析。
-- **Salesforce services 与 session management** 负责面向指定 Org 的认证通信。
+架构图可以分三层理解：
 
-## 三个架构要点
+1. **用户获得什么：** 在一个工作空间中完成多 Org 操作、Metadata 搜索和分析。
+2. **系统如何工作：** Runtime 将 Action 与上下文关联，再分发给可复用的 Capability 和 Salesforce Services。
+3. **为什么能够演进：** Core 定义平台契约，Host 提供具体实现，例如 Chrome Storage 和 OAuth Adapter。
 
-### 1. 多 Org 是运行时能力
+## 背后的架构思想
 
-仅有 Org 选择器并不足以构成可靠的多 Org 能力。每项操作都需要明确的目标 Org 和对应的认证 Session。操作执行期间，目标 Org 必须保持稳定，不能在异步响应返回时重新依赖当前界面选中的 Org。
+### 多 Org 属于执行过程，而不只是界面功能
 
-已连接的 Session 只意味着可以尝试请求，并不保证请求一定成功。Token 可能过期，请求可能失败，而 Salesforce 授权始终由目标 Org 中当前认证用户的实际权限决定。
+每项操作都需要明确的目标 Org 和对应的认证 Session。操作执行期间，目标 Org 必须保持稳定。Session 可用只意味着可以尝试请求，并不保证请求一定成功；最终访问能力仍由目标 Org 中当前认证用户的 Salesforce 权限决定。
 
-### 2. 上下文驱动执行
+### Context 让工作始终归属于发起它的地方
 
-Work Context 表示一个工作流，而不是某个 Screen、Tab 或 Panel。它负责关联工作流的输入和执行结果。
+Context 不是 Screen、Tab 或 Panel。它提供共享资源，并稳定关联一项工作的输入与结果。当用户在 Action 执行期间切换界面时，结果仍应归属于最初发起工作的 Context，而不是响应返回时恰好可见的界面。
 
-当用户在 Action 执行期间切换界面时，返回结果仍归属于最初发起工作的 Context。界面导航不应悄悄改变正在执行的工作归属，也不应强制用户返回原界面。
+### Capability 是可复用的能力单元
 
-### 3. 可组合的分析能力
+Workspace 提供操作入口，Core Capability 负责实际工作。这样可以避免把 Salesforce 操作和分析逻辑嵌入某个 UI 组件。随着产品演进，同一套能力可以服务于不同工作流。
 
-分析能力应能从不同工作空间入口复用，而不把领域逻辑放进 UI 组件。Workspace 协调交互，Core capabilities 通过共享的 Salesforce services 完成实际工作。
+## 能力状态
 
-Permission 和 Reference 是 Wye 持续演进的重要分析方向。它们出现在架构中，并不意味着所有场景都已完成。具体交付状态以公开 [Roadmap](./ROADMAP.md) 为准。
+当前工作空间基础包括多 Org Session 操作、Salesforce Services、Metadata Search 和部分开发辅助工具。Permission 与 Reference 是两大核心分析方向，仍在持续演进。具体范围和交付状态以公开 [Roadmap](./ROADMAP.md) 为准；它们出现在图中，不代表所有规划场景都已交付。
 
-## 工程边界
+## 平台边界
 
-| 范围 | 负责 | 不负责 |
-|---|---|---|
-| Workspace UI | 呈现、导航、视图状态 | Salesforce 领域规则 |
-| Application integration | 组合与分发 | 具体分析逻辑 |
-| Work Context | 工作流输入与结果归属 | UI 导航状态 |
-| Core capabilities | 操作与分析逻辑 | 浏览器特定行为 |
-| Salesforce services | 面向指定 Org 的 API 通信 | UI 呈现 |
+Core 为 Storage、OAuth 等平台相关资源定义契约，当前 Extension Host 提供 Chrome 平台实现。未来其他 Host 可以提供自己的 Adapter。这是架构上的扩展点，不代表 Web、Node.js 或 Server 版本已经作为产品得到支持。
 
-核心工程原则：
+## 信任边界
 
-- 使用显式 Context 和 Org 身份，避免依赖可变的隐式全局状态。
-- 领域逻辑与 React 组件、浏览器 API 解耦。
-- 缺失或不完整的数据应视为未知，而不是直接视为不存在。
-- 抽象应对应真实职责，而不是为了层次对称而增加复杂度。
+以下四个概念必须区分：
 
-## 信任边界与范围
+- **Context：** 哪个工作流拥有输入与结果。
+- **Org 身份：** 操作目标是哪一个 Salesforce Org。
+- **认证与 Session 状态：** 是否存在可用的认证 Session，以及请求是否成功。
+- **Salesforce 授权：** 当前用户在该 Org 中实际允许访问什么。
 
-Wye 通过用户已认证的 Salesforce Session 工作。工作上下文、目标 Org 身份、认证与 Session 状态、Salesforce 授权是四个不同概念。选择 Org 不会自动获得权限；成功读取 Metadata 也不能证明拥有记录级访问权限。
-
-本文描述的是架构基础与边界，不保证所有规划能力都已发布。当前项目介绍见 [README](./README.md)，能力规划见 [Roadmap](./ROADMAP.md)，数据处理承诺见 [Privacy Policy](./Privacy%20Policy.md)。
+选择 Org 不会自动获得权限；成功读取 Metadata 也不能证明拥有记录级访问权限。Wye 的数据处理承诺见 [Privacy Policy](./Privacy%20Policy.md)。
