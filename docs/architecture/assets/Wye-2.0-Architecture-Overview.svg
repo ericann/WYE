@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1900" viewBox="0 0 1600 1900" role="img" aria-labelledby="title desc">
+<title id="title">Wye 2.0 Architecture Overview</title>
+<desc id="desc">Bilingual architecture overview showing Wye Application, UI Core, Wye Core, and External Systems.</desc>
+<defs>
+  <style>
+    text{font-family:Inter,"Segoe UI","Microsoft YaHei",Arial,sans-serif;fill:#172033}
+    .eyebrow{font-size:22px;font-weight:700;letter-spacing:2px;fill:#64748b}
+    .main{font-size:42px;font-weight:750}
+    .sub{font-size:22px;fill:#64748b}
+    .section{font-size:31px;font-weight:750}
+    .module{font-size:27px;font-weight:700}
+    .small{font-size:20px;fill:#64748b}
+    .micro{font-size:18px;fill:#64748b}
+    .panel{fill:#fff;stroke:#cbd5e1;stroke-width:2}
+    .app{fill:#f8fbff;stroke:#93c5fd;stroke-width:2}
+    .ui{fill:#f7f8ff;stroke:#a5b4fc;stroke-width:2}
+    .core{fill:#f7fcf9;stroke:#86c9a4;stroke-width:2}
+    .external{fill:#f8fafc;stroke:#cbd5e1;stroke-width:2}
+    .entry{fill:#eaf3ff;stroke:#93c5fd;stroke-width:1.5}
+    .foundation{fill:#e8f7ef;stroke:#86c9a4;stroke-width:1.5}
+    .cap{fill:#fff;stroke:#b7c8bd;stroke-width:1.5}
+    .work{fill:#edf2ff;stroke:#a5b4fc;stroke-width:1.5}
+    .line{stroke:#64748b;stroke-width:2.5;fill:none}
+    .dash{stroke:#94a3b8;stroke-width:2;stroke-dasharray:8 7;fill:none}
+  </style>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#64748b"/></marker>
+  <marker id="arrowBoth" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#64748b"/></marker>
+</defs>
+<rect width="1600" height="1900" fill="#ffffff"/>
+<text x="800" y="76" text-anchor="middle" class="eyebrow">SALESFORCE RUNTIME WORKSPACE</text>
+<text x="800" y="132" text-anchor="middle" class="main">Wye 2.0</text>
+<text x="800" y="172" text-anchor="middle" class="sub">Architecture Overview · 架构全景</text>
+
+<!-- Application -->
+<rect x="100" y="220" width="1400" height="300" rx="24" class="app"/>
+<text x="145" y="275" class="section">Wye Application</text>
+<text x="145" y="309" class="small">应用层 · Application Entry Points &amp; Services</text>
+<rect x="145" y="345" width="400" height="105" rx="16" class="entry"/>
+<text x="345" y="389" text-anchor="middle" class="module">Workspace</text>
+<text x="345" y="423" text-anchor="middle" class="small">统一工作入口 · Unified Workspace</text>
+<rect x="600" y="345" width="400" height="105" rx="16" class="entry"/>
+<text x="800" y="389" text-anchor="middle" class="module">Content</text>
+<text x="800" y="423" text-anchor="middle" class="small">Salesforce 页面上下文 · Page Context</text>
+<rect x="1055" y="345" width="400" height="105" rx="16" class="entry"/>
+<text x="1255" y="389" text-anchor="middle" class="module">Side Panel</text>
+<text x="1255" y="423" text-anchor="middle" class="small">React UI · 主交互入口</text>
+<rect x="145" y="468" width="1310" height="35" rx="10" fill="#e9f1fb"/>
+<text x="800" y="493" text-anchor="middle" font-size="21" font-weight="700">Application Services · ActionRouter  +  Managers</text>
+
+<!-- UI Core -->
+<path d="M800 520 V565" class="line" marker-start="url(#arrowBoth)" marker-end="url(#arrowBoth)"/>
+<rect x="100" y="570" width="1400" height="250" rx="24" class="ui"/>
+<text x="145" y="625" class="section">UI Core</text>
+<text x="145" y="660" class="small">UI 运行时与交互状态管理 · UI Runtime &amp; Interaction State</text>
+<rect x="145" y="690" width="285" height="90" rx="14" class="panel"/>
+<text x="287" y="727" text-anchor="middle" class="module">UIRuntime</text>
+<text x="287" y="757" text-anchor="middle" class="micro">统一 UI 运行时</text>
+<rect x="455" y="690" width="285" height="90" rx="14" class="panel"/>
+<text x="597" y="727" text-anchor="middle" class="module">ContextBinding</text>
+<text x="597" y="757" text-anchor="middle" class="micro">工作上下文绑定</text>
+<rect x="765" y="690" width="285" height="90" rx="14" class="panel"/>
+<text x="907" y="727" text-anchor="middle" class="module">UI State</text>
+<text x="907" y="757" text-anchor="middle" class="micro">界面状态</text>
+<rect x="1075" y="690" width="380" height="90" rx="14" class="panel"/>
+<text x="1265" y="727" text-anchor="middle" class="module">ActionDispatcher</text>
+<text x="1265" y="757" text-anchor="middle" class="micro">Action 调用契约 · Contract</text>
+
+<!-- Core -->
+<path d="M800 820 V865" class="line" marker-start="url(#arrowBoth)" marker-end="url(#arrowBoth)"/>
+<rect x="100" y="870" width="1400" height="650" rx="24" class="core"/>
+<text x="145" y="925" class="section">Wye Core</text>
+<text x="145" y="960" class="small">独立于宿主的能力运行时 · Host-independent Capability Runtime</text>
+<rect x="145" y="995" width="1310" height="115" rx="16" class="foundation"/>
+<text x="800" y="1044" text-anchor="middle" class="module">Runtime · Context · Kernel</text>
+<text x="800" y="1080" text-anchor="middle" class="small">运行时创建 · 上下文承载 · Capability 注册、装配与生命周期管理</text>
+<text x="800" y="1160" text-anchor="middle" class="eyebrow">CAPABILITIES · 核心能力</text>
+<rect x="145" y="1190" width="245" height="105" rx="14" class="cap"/>
+<text x="267" y="1235" text-anchor="middle" class="module">Session</text>
+<text x="267" y="1267" text-anchor="middle" class="micro">Capability</text>
+<rect x="415" y="1190" width="245" height="105" rx="14" class="cap"/>
+<text x="537" y="1235" text-anchor="middle" class="module">SF</text>
+<text x="537" y="1267" text-anchor="middle" class="micro">Capability</text>
+<rect x="685" y="1190" width="245" height="105" rx="14" class="cap"/>
+<text x="807" y="1235" text-anchor="middle" class="module">Search</text>
+<text x="807" y="1267" text-anchor="middle" class="micro">Capability</text>
+<rect x="955" y="1190" width="245" height="105" rx="14" class="cap"/>
+<text x="1077" y="1235" text-anchor="middle" class="module">Permission</text>
+<text x="1077" y="1267" text-anchor="middle" class="micro">Capability</text>
+<rect x="1225" y="1190" width="230" height="105" rx="14" class="cap"/>
+<text x="1340" y="1235" text-anchor="middle" class="module">Reference</text>
+<text x="1340" y="1267" text-anchor="middle" class="micro">Capability</text>
+<rect x="145" y="1350" width="1310" height="115" rx="16" class="work"/>
+<text x="800" y="1400" text-anchor="middle" class="module">Work Context</text>
+<text x="800" y="1437" text-anchor="middle" class="small">工作数据与能力访问上下文 · Business Working Context</text>
+<text x="800" y="1490" text-anchor="middle" class="micro">独立于 UI State；由应用流程创建、选择和使用</text>
+
+<!-- External -->
+<path d="M800 1520 V1565" class="line" marker-start="url(#arrowBoth)" marker-end="url(#arrowBoth)"/>
+<rect x="100" y="1570" width="1400" height="245" rx="24" class="external"/>
+<text x="145" y="1625" class="section">External Systems · 外部系统</text>
+<rect x="490" y="1660" width="620" height="115" rx="16" class="panel"/>
+<text x="800" y="1705" text-anchor="middle" class="module">Chrome Platform</text>
+<text x="800" y="1742" text-anchor="middle" class="small">Chrome APIs · Storage · OAuth</text>
+
+<text x="800" y="1855" text-anchor="middle" class="micro">ActionDispatcher = UI Core contract  ·  ActionRouter = Application implementation</text>
+</svg>
