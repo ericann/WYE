@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1370" viewBox="0 0 1200 1370" role="img" aria-labelledby="title desc">
+<title id="title">Wye Runtime Analysis Workspace Architecture</title>
+<desc id="desc">A layered architecture showing the user value, Chrome Extension host, Wye Core runtime, workspace capabilities, platform contracts, platform implementations, and Salesforce Orgs.</desc>
+<defs>
+  <style>
+    .h{font:700 30px Arial,sans-serif;fill:#172033}.sub{font:18px Arial,sans-serif;fill:#586174}
+    .section{font:700 22px Arial,sans-serif;fill:#1d2939}.label{font:700 19px Arial,sans-serif;fill:#1d2939}
+    .body{font:16px Arial,sans-serif;fill:#5b6472}.tiny{font:14px Arial,sans-serif;fill:#667085}
+    .pill{font:700 14px Arial,sans-serif;letter-spacing:.5px}
+    .card{fill:#fff;stroke:#d8dee8;stroke-width:1.5}.inner{fill:#f4f6f9;stroke:#e3e7ee;stroke-width:1}
+    .line{stroke:#697586;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .dash{stroke:#8a96a8;stroke-width:2;fill:none;stroke-dasharray:7 6}
+  </style>
+  <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#697586"/></marker>
+</defs>
+<rect width="1200" height="1370" fill="#fbfcfe"/>
+<rect x="30" y="24" width="1140" height="1320" rx="26" fill="#fff" stroke="#d7dde7" stroke-width="2"/>
+<rect x="445" y="48" width="310" height="34" rx="17" fill="#e7f0ff"/>
+<text x="600" y="71" text-anchor="middle" class="pill" fill="#1764c0">PRODUCT VALUE</text>
+<text x="600" y="119" text-anchor="middle" class="h">Wye Runtime Analysis Workspace</text>
+<text x="600" y="151" text-anchor="middle" class="sub">One workspace · Multiple Salesforce Orgs · Connected analysis</text>
+<text x="600" y="190" text-anchor="middle" class="tiny">Salesforce professionals investigate, operate, and understand their Orgs</text>
+<path d="M600 205 V235" class="line" marker-end="url(#arrow)"/>
+
+<!-- Host -->
+<rect x="70" y="250" width="1060" height="105" rx="18" class="card"/>
+<rect x="94" y="268" width="210" height="28" rx="14" fill="#e7f0ff"/>
+<text x="199" y="287" text-anchor="middle" class="pill" fill="#1764c0">HOST / APPLICATION</text>
+<text x="600" y="298" text-anchor="middle" class="label">Chrome Extension Host</text>
+<text x="600" y="328" text-anchor="middle" class="body">Workspace composition · UI entry points · Platform integration</text>
+<path d="M600 355 V385" class="line" marker-end="url(#arrow)"/>
+
+<!-- Core frame -->
+<rect x="70" y="400" width="1060" height="760" rx="22" fill="#fcfdff" stroke="#cfd7e3" stroke-width="2"/>
+<text x="600" y="445" text-anchor="middle" class="h">Wye Core</text>
+<text x="600" y="475" text-anchor="middle" class="sub">Reusable runtime and Salesforce analysis capabilities</text>
+
+<!-- runtime -->
+<rect x="95" y="500" width="1010" height="190" rx="17" fill="#edf4ff" stroke="#c8dafa" stroke-width="1.5"/>
+<text x="120" y="538" class="section">Runtime Foundation</text>
+<rect x="870" y="515" width="205" height="30" rx="15" fill="#d6e8ff"/>
+<text x="972" y="535" text-anchor="middle" class="pill" fill="#1764c0">EXECUTION CONTROL</text>
+<rect x="120" y="558" width="300" height="88" rx="12" class="inner"/>
+<text x="145" y="592" class="label">Context</text>
+<text x="145" y="620" class="body">Shared resources and work context</text>
+<rect x="450" y="558" width="300" height="88" rx="12" class="inner"/>
+<text x="475" y="592" class="label">ActionRouter</text>
+<text x="475" y="620" class="body">Action dispatch and orchestration</text>
+<rect x="780" y="558" width="300" height="88" rx="12" class="inner"/>
+<text x="805" y="592" class="label">Registration</text>
+<text x="805" y="620" class="body">Manager and Service registration</text>
+<text x="600" y="674" text-anchor="middle" class="tiny">Context → Action dispatch → Registered managers and services</text>
+<path d="M600 690 V718" class="line" marker-end="url(#arrow)"/>
+
+<!-- capabilities -->
+<rect x="95" y="730" width="1010" height="270" rx="17" class="card"/>
+<text x="120" y="770" class="section">Workspace Capabilities</text>
+<rect x="865" y="746" width="210" height="28" rx="14" fill="#dcf5e6"/>
+<text x="970" y="765" text-anchor="middle" class="pill" fill="#168044">USER-FACING VALUE</text>
+<rect x="120" y="795" width="300" height="78" rx="11" class="inner"/>
+<text x="142" y="827" class="label">Multi-Org Session</text>
+<text x="142" y="852" class="body">Work in the intended Salesforce Org</text>
+<rect x="450" y="795" width="300" height="78" rx="11" class="inner"/>
+<text x="472" y="827" class="label">Salesforce Services</text>
+<text x="472" y="852" class="body">Reusable API access and operations</text>
+<rect x="780" y="795" width="300" height="78" rx="11" class="inner"/>
+<text x="802" y="827" class="label">Metadata Search</text>
+<text x="802" y="852" class="body">Discover resources across Orgs</text>
+<rect x="120" y="890" width="465" height="78" rx="11" class="inner"/>
+<text x="142" y="922" class="label">Permission Analysis</text>
+<text x="142" y="947" class="body">Understand effective access and its sources</text>
+<rect x="615" y="890" width="465" height="78" rx="11" class="inner"/>
+<text x="637" y="922" class="label">Reference Analysis</text>
+<text x="637" y="947" class="body">Explore metadata resource relationships</text>
+<text x="600" y="987" text-anchor="middle" class="tiny">Permission and Reference are evolving analysis capabilities</text>
+<path d="M600 1000 V1025" class="line" marker-end="url(#arrow)"/>
+
+<!-- ports -->
+<rect x="95" y="1035" width="1010" height="100" rx="17" fill="#fff9ee" stroke="#ead7ad" stroke-width="1.5"/>
+<text x="120" y="1070" class="section">Platform Contracts</text>
+<rect x="500" y="1050" width="255" height="62" rx="11" class="inner"/>
+<text x="627" y="1077" text-anchor="middle" class="label">StorageAPI</text>
+<text x="627" y="1099" text-anchor="middle" class="tiny">Storage contract</text>
+<rect x="780" y="1050" width="285" height="62" rx="11" class="inner"/>
+<text x="922" y="1077" text-anchor="middle" class="label">OAuthAPI</text>
+<text x="922" y="1099" text-anchor="middle" class="tiny">Authentication contract</text>
+
+<!-- adapters -->
+<path d="M600 1160 V1190" class="line" marker-end="url(#arrow)"/>
+<rect x="70" y="1205" width="1060" height="105" rx="18" fill="#f0faf4" stroke="#b8dfc7" stroke-width="1.5"/>
+<text x="100" y="1245" class="section">Platform Implementations</text>
+<text x="100" y="1274" class="body">Current host supplies concrete implementations of Core contracts</text>
+<rect x="640" y="1225" width="190" height="42" rx="21" fill="#fff" stroke="#d7e8dc"/>
+<text x="735" y="1252" text-anchor="middle" class="tiny">ChromeStorageAPI</text>
+<rect x="845" y="1225" width="175" height="42" rx="21" fill="#fff" stroke="#d7e8dc"/>
+<text x="932" y="1252" text-anchor="middle" class="tiny">ChromeOAuthAPI</text>
+<text x="830" y="1290" text-anchor="middle" class="tiny">Other host adapters are possible future extensions</text>
+</svg>
